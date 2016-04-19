@@ -10,7 +10,7 @@ import java.lang.ref.WeakReference;
 public class RemoteControlReceiver extends BroadcastReceiver {
     private WeakReference<IPlayerPresenter> mPlayerPresenterWeak;
 
-    public void setPresenter(IPlayerPresenter playerPresenter) {
+    public RemoteControlReceiver(IPlayerPresenter playerPresenter) {
         mPlayerPresenterWeak = new WeakReference<>(playerPresenter);
     }
 

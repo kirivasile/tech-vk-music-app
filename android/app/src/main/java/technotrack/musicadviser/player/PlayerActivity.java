@@ -29,6 +29,11 @@ public class PlayerActivity extends AppCompatActivity implements IPlayerView {
         mAudioManager = (AudioManager) getApplicationContext()
                 .getSystemService(Context.AUDIO_SERVICE);
 
+        mComponentName = new ComponentName(getPackageName(),
+                RemoteControlReceiver.class.getName());
+        mAudioManager.registerMediaButtonEventReceiver(mComponentName);
+        mRemoteControlReceiver.setPresenter(mPlayerPresenter);
+
         mPlayerPresenter = new PlayerPresenter(this);
         mRemoteControlReceiver = new RemoteControlReceiver();
     }
@@ -36,13 +41,7 @@ public class PlayerActivity extends AppCompatActivity implements IPlayerView {
     @Override
     protected void onStart() {
         super.onStart();
-
         Log.d(TAG, "onStart");
-
-        mComponentName = new ComponentName(getPackageName(),
-                RemoteControlReceiver.class.getName());
-        mAudioManager.registerMediaButtonEventReceiver(mComponentName);
-        mRemoteControlReceiver.setPresenter(mPlayerPresenter);
 
         mPlayerPresenter.onStart();
     }
@@ -50,7 +49,6 @@ public class PlayerActivity extends AppCompatActivity implements IPlayerView {
     @Override
     protected void onResume() {
         super.onResume();
-
         Log.d(TAG, "onResume");
 
         mPlayerPresenter.onResume();
@@ -59,7 +57,6 @@ public class PlayerActivity extends AppCompatActivity implements IPlayerView {
     @Override
     protected void onPause() {
         super.onPause();
-
         Log.d(TAG, "onPause");
 
         mPlayerPresenter.onPause();
@@ -68,14 +65,18 @@ public class PlayerActivity extends AppCompatActivity implements IPlayerView {
     @Override
     protected void onStop() {
         super.onStop();
-
         Log.d(TAG, "onStop");
-
-        mAudioManager.unregisterMediaButtonEventReceiver(mComponentName);
 
         mPlayerPresenter.onStop();
     }
 
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        Log.d(TAG, "onDestroy");
+
+        mAudioManager.unregisterMediaButtonEventReceiver(mComponentName);
+    }
     @Override
     public void showTrackInfo() {
 
